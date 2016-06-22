@@ -31,12 +31,13 @@ import com.google.common.collect.Collections2;
 public class DifferenceTwoCollectionTest {
 
 	public static <E> Collection<E> getAdded(Collection<E> existing, Collection<E> updated) {
-		Collection<E> filter = existing;
-		for (E e : filter) {
-			filter = Collections2.filter(updated, Predicates.not(Predicates.equalTo(e)));
-		}
 
-		return filter;
+		return Collections2.filter(updated, Predicates.not(Predicates.in(existing)));
+	}
+
+	public static <E> Collection<E> getRemoved(Collection<E> existing, Collection<E> updated) {
+
+		return Collections2.filter(existing, Predicates.not(Predicates.in(updated)));
 	}
 
 	public static void main(String[] args) {
@@ -46,6 +47,7 @@ public class DifferenceTwoCollectionTest {
 		existing.add("a");
 		existing.add("b");
 		existing.add("c");
+		existing.add("e");
 
 		updated.add("a");
 		updated.add("b");
@@ -53,10 +55,14 @@ public class DifferenceTwoCollectionTest {
 		updated.add("d");
 
 		Collection<String> added = getAdded(existing, updated);
-		for (String string : added) {
-			System.out.println(string);
+		for (String a : added) {
+			System.out.println("Added = " + a);
 		}
 
+		Collection<String> removed = getRemoved(existing, updated);
+		for (String r : removed) {
+			System.out.println("Removed = " + r);
+		}
 	}
 
 }
